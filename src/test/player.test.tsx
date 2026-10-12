@@ -56,6 +56,6 @@ describe("Custom browser player", () => {
     expect(screen.getByRole("alert")).toHaveTextContent("couldn’t be loaded");
     expect(screen.getByRole("button", { name: "Try again" })).toHaveFocus();
     fireEvent.click(screen.getByRole("button", { name: "Try again" }));
-    expect(screen.getByRole("status")).toHaveTextContent("Buffering");
+    expect(screen.getByText("Buffering…")).toBeInTheDocument();
   });
 });
