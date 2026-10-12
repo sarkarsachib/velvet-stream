@@ -47,6 +47,8 @@ function Privacy() {
             Local playback progress cleared.
           </p>
         )}
+        <h2>Your saved stories & motion preference</h2>
+        <p>My List stores only saved title identifiers in this browser. Your optional calmer-motion choice is also local. Neither is connected to an account or shared with advertising providers. Remove titles individually from My List, or clear your list and progress in experience settings.</p>
         <h2>Advertising</h2>
         <p>
           Adsterra and Monetag are planned recipients for display/native advertising. Both are
