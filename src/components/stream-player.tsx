@@ -10,6 +10,16 @@ export function StreamPlayer({ title }: { title: Title }) {
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const [attempt, setAttempt] = useState(0);
   const [speed, setSpeed] = useState("1");
+  const position = useRef<{ time: number; resume: boolean } | undefined>(undefined);
+  const retry = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (status !== "loading" || !source) return;
+    const timeout = setTimeout(() => setStatus("error"), 20000);
+    return () => clearTimeout(timeout);
+  }, [status, source, attempt]);
+  useEffect(() => {
+    if (status === "error") retry.current?.focus();
+  }, [status]);
   useEffect(() => {
     const v = video.current;
     if (!v || !source) return;
@@ -43,11 +53,12 @@ export function StreamPlayer({ title }: { title: Title }) {
     void load();
     return () => {
       disposed = true;
+      saveProgress(title.id, v.currentTime, v.duration);
       cleanup();
       v.removeAttribute("src");
       v.load();
     };
-  }, [source, attempt]);
+  }, [source, attempt, title.id]);
   useEffect(() => {
     const v = video.current;
     if (!v) return;
@@ -93,11 +104,18 @@ export function StreamPlayer({ title }: { title: Title }) {
           preload="metadata"
           poster={title.cover || title.image}
           aria-label={`${title.name} player`}
+          id="noctra-video"
+          tabIndex={0}
           onLoadedMetadata={() => {
             const v = video.current;
             if (!v) return;
             const p = readProgress()[title.id];
-            if (p && p.time < v.duration - 10) v.currentTime = p.time;
+            const switchPosition = position.current;
+            if (switchPosition && Number.isFinite(v.duration)) {
+              v.currentTime = Math.min(switchPosition.time, Math.max(0, v.duration - 0.1));
+              position.current = undefined;
+              if (switchPosition.resume) void v.play().catch(() => {});
+            } else if (p && p.time < v.duration - 10) v.currentTime = p.time;
             v.playbackRate = Number(speed);
             setStatus("ready");
           }}
@@ -124,7 +142,7 @@ export function StreamPlayer({ title }: { title: Title }) {
               if (v.paused) void v.play().catch(() => setStatus("error"));
               else v.pause();
             }
-            if (e.key === "ArrowRight") {
+            if (e.key === "ArrowRight" && Number.isFinite(v.duration)) {
               e.preventDefault();
               v.currentTime = Math.min(v.duration, v.currentTime + 5);
             }
@@ -159,7 +177,7 @@ export function StreamPlayer({ title }: { title: Title }) {
             <p className="text-muted-foreground text-sm my-3">
               The media source may be unavailable. Please try again.
             </p>
-            <Button onClick={() => setAttempt((x) => x + 1)} variant="cinematic">
+            <Button ref={retry} onClick={() => setAttempt((x) => x + 1)} variant="cinematic">
               <RotateCcw />
               Try again
             </Button>
@@ -172,6 +190,7 @@ export function StreamPlayer({ title }: { title: Title }) {
           <label>
             Speed{" "}
             <select
+              aria-controls="noctra-video"
               value={speed}
               onChange={(e) => {
                 setSpeed(e.target.value);
@@ -189,8 +208,15 @@ export function StreamPlayer({ title }: { title: Title }) {
             <label>
               Quality{" "}
               <select
+                aria-controls="noctra-video"
                 value={source.url}
                 onChange={(e) => {
+                  const v = video.current;
+                  if (v) position.current = {time: v.currentTime, resume: !v.paused};
+                  if (e.target.value === title.source?.url) {
+                    setSource(title.source);
+                    return;
+                  }
                   const q = title.source?.qualities?.find((x) => x.url === e.target.value);
                   if (q) setSource({ ...q, subtitles: source.subtitles });
                 }}

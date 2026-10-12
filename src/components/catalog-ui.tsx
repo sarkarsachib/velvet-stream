@@ -10,6 +10,13 @@ export function MovieCard({ title, progress }: { title: Title; progress?: number
   const [loaded, setLoaded] = useState(false),
     [failed, setFailed] = useState(false);
   const poster = useRef<HTMLDivElement>(null);
+  const image = useRef<HTMLImageElement>(null);
+  useEffect(() => {
+    if (image.current?.complete) {
+      setLoaded(true);
+      setFailed(image.current.naturalWidth === 0);
+    }
+  }, [title.image]);
   function tilt(e: PointerEvent<HTMLAnchorElement>) {
     if (
       e.pointerType !== "mouse" ||
@@ -43,6 +50,7 @@ export function MovieCard({ title, progress }: { title: Title; progress?: number
       >
         <div className="poster" ref={poster} data-loaded={loaded}>
           <img
+            ref={image}
             src={title.image}
             alt={`${title.name} — original demo artwork`}
             loading="lazy"
