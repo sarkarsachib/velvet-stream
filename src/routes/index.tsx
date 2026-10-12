@@ -16,6 +16,8 @@ import {
 import { catalog, featured, genres, titleHead } from "@/lib/catalog";
 import { Hero, Rail } from "@/components/catalog-ui";
 import { AdSlot } from "@/components/ad-slot";
+import { DepthIcon } from "@/components/depth-icon";
+import { SurpriseMe } from "@/components/library-actions";
 import { useProgress } from "@/lib/progress";
 export const Route = createFileRoute("/")({
   head: () =>
@@ -36,7 +38,7 @@ function Index() {
   const icons = [Rocket, Ghost, Swords, Clapperboard, Drama, Orbit];
   return (
     <main>
-      <Hero title={featured} />
+      <Hero title={featured} slides={[featured, catalog[0], catalog[3]]} />
       <div className="content-wrap">
         <Rail name="Trending Now" icon={<Flame />} titles={catalog} />
         <AdSlot placement="home" />
@@ -54,7 +56,7 @@ function Index() {
               <Orbit />
               Find your universe
             </h2>
-            <span className="section-action">A mood for every moment</span>
+            <SurpriseMe />
           </div>
           <div className="genre-grid">
             {genres.map((g, i) => {
@@ -66,7 +68,7 @@ function Index() {
                   search={{ q: "", genre: g, kind: "all" }}
                   className="genre-tile"
                 >
-                  <Icon />
+                  <DepthIcon icon={Icon} tone="cyan" />
                   {g}
                 </Link>
               );

@@ -4,6 +4,8 @@ import { getTitle, titleHead } from "@/lib/catalog";
 import { StreamPlayer } from "@/components/stream-player";
 import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/watch/$id")({
+  validateSearch: (s: Record<string, unknown>) =>
+    typeof s["episode"] === "string" ? { episode: s["episode"] } : {},
   loader: ({ params }) => {
     const t = getTitle(params.id);
     if (!t) throw notFound();
@@ -18,6 +20,19 @@ export const Route = createFileRoute("/watch/$id")({
 });
 function Watch() {
   const title = Route.useLoaderData();
+  const search = Route.useSearch();
+  const episode = title.seasons?.flatMap((s) => s.episodes).find((e) => e.id === search.episode);
+  const { source: titleSource, ...baseTitle } = title;
+  const playbackTitle = episode
+    ? {
+        ...baseTitle,
+        id: episode.id,
+        name: `${title.name} · ${episode.name}`,
+        duration: episode.duration,
+        synopsis: episode.synopsis,
+        ...(episode.source ? { source: episode.source } : {}),
+      }
+    : title;
   return (
     <main className="page content-wrap">
       <Button asChild variant="ghost" className="mb-5 px-0 text-muted-foreground">
@@ -26,17 +41,24 @@ function Watch() {
           Back to title
         </Link>
       </Button>
-      <StreamPlayer key={title.id} title={title} />
+      {search.episode && !episode ? (
+        <div className="empty-state">
+          <h2>Episode not found.</h2>
+          <p>This episode is not in the sample catalog.</p>
+        </div>
+      ) : (
+        <StreamPlayer key={playbackTitle.id} title={playbackTitle} parentId={title.id} />
+      )}
       <div className="section-heading mt-7">
         <div className="min-w-0">
-          <h1 className="text-2xl">{title.name}</h1>
+          <h1 className="text-2xl">{playbackTitle.name}</h1>
           <p className="page-subtitle">
-            {title.year} · {title.genre} · {title.duration} · Original demo
+            {title.year} · {title.genre} · {playbackTitle.duration} · Original demo
           </p>
         </div>
         <ShieldCheck className="text-ice shrink-0" size={24} />
       </div>
-      <p className="page-subtitle max-w-2xl">{title.synopsis}</p>
+      <p className="page-subtitle max-w-2xl">{playbackTitle.synopsis}</p>
     </main>
   );
 }

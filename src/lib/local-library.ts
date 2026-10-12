@@ -1,0 +1,76 @@
+import { useEffect, useState } from "react";
+const listKey = "noctra.list.v1",
+  preferenceKey = "noctra.preferences.v1";
+export function readList(): string[] {
+  try {
+    const value: unknown = JSON.parse(localStorage.getItem(listKey) || "[]");
+    return Array.isArray(value) ? value.filter((id): id is string => typeof id === "string") : [];
+  } catch {
+    return [];
+  }
+}
+export function toggleSaved(id: string) {
+  const current = readList();
+  const next = current.includes(id) ? current.filter((x) => x !== id) : [...current, id];
+  try {
+    localStorage.setItem(listKey, JSON.stringify(next));
+    window.dispatchEvent(new Event("noctra-list"));
+    return true;
+  } catch {
+    return false;
+  }
+}
+export function clearList() {
+  try {
+    localStorage.removeItem(listKey);
+    window.dispatchEvent(new Event("noctra-list"));
+  } catch {
+    /* optional */
+  }
+}
+export function useMyList() {
+  const [ids, setIds] = useState<string[]>([]);
+  useEffect(() => {
+    const sync = () => setIds(readList());
+    sync();
+    window.addEventListener("storage", sync);
+    window.addEventListener("noctra-list", sync);
+    return () => {
+      window.removeEventListener("storage", sync);
+      window.removeEventListener("noctra-list", sync);
+    };
+  }, []);
+  return ids;
+}
+export function useMotionPreference() {
+  const [calm, setCalm] = useState(false);
+  useEffect(() => {
+    const sync = () => {
+      try {
+        setCalm(localStorage.getItem(preferenceKey) === "calm");
+      } catch {
+        setCalm(false);
+      }
+    };
+    sync();
+    window.addEventListener("storage", sync);
+    window.addEventListener("noctra-preferences", sync);
+    return () => {
+      window.removeEventListener("storage", sync);
+      window.removeEventListener("noctra-preferences", sync);
+    };
+  }, []);
+  useEffect(() => {
+    document.documentElement.dataset["motion"] = calm ? "calm" : "full";
+  }, [calm]);
+  function change(value: boolean) {
+    setCalm(value);
+    try {
+      localStorage.setItem(preferenceKey, value ? "calm" : "full");
+      window.dispatchEvent(new Event("noctra-preferences"));
+    } catch {
+      /* session preference remains */
+    }
+  }
+  return { calm, setCalm: change };
+}

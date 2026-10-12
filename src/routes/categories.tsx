@@ -1,0 +1,73 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowUpRight, Layers3 } from "lucide-react";
+import { catalog, genres, titleHead } from "@/lib/catalog";
+import { DepthIcon, depthIcons } from "@/components/depth-icon";
+import { SurpriseMe } from "@/components/library-actions";
+export const Route = createFileRoute("/categories")({
+  head: () =>
+    titleHead(
+      "Find your universe",
+      "Explore NOCTRA’s original sample genre collections: sci-fi, thrillers, anime, drama, fantasy and adventure.",
+    ),
+  component: Categories,
+});
+function Categories() {
+  const icons = [
+    depthIcons.scifi,
+    depthIcons.thriller,
+    depthIcons.anime,
+    depthIcons.adventure,
+    depthIcons.drama,
+    depthIcons.fantasy,
+  ];
+  const descriptions = [
+    "Beyond the edges of the known.",
+    "Stay a little closer to the edge.",
+    "Extraordinary worlds, beautifully drawn.",
+    "The journey is just the beginning.",
+    "Stories that stay with you.",
+    "A world where anything is possible.",
+  ];
+  return (
+    <main className="page content-wrap">
+      <div className="eyebrow mb-4">
+        <DepthIcon icon={Layers3} tone="cyan" />
+        CURATED ESCAPES
+      </div>
+      <div className="section-heading">
+        <div className="min-w-0">
+          <h1>Find your universe.</h1>
+          <p className="page-subtitle">Follow a feeling. Discover a whole new world.</p>
+        </div>
+        <SurpriseMe />
+      </div>
+      <div className="category-collection">
+        {genres.map((genre, i) => {
+          const titles = catalog.filter((t) => t.genre === genre);
+          const artwork = titles[0]?.cover || titles[0]?.image;
+          return (
+            <Link
+              key={genre}
+              to="/discover"
+              search={{ q: "", genre, kind: "all" }}
+              className="category-card"
+            >
+              {artwork && <img src={artwork} alt="" loading="lazy" width={640} height={360} />}
+              <div className="category-content">
+                <DepthIcon icon={icons[i] || Layers3} tone={i % 2 === 0 ? "cyan" : "violet"} />
+                <h2>{genre}</h2>
+                <p>{descriptions[i]}</p>
+                <span>
+                  {titles.length
+                    ? `${titles.length} sample ${titles.length === 1 ? "title" : "titles"}`
+                    : "New stories coming"}{" "}
+                  <ArrowUpRight size={15} />
+                </span>
+              </div>
+            </Link>
+          );
+        })}
+      </div>
+    </main>
+  );
+}

@@ -1,18 +1,23 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Search, X, SlidersHorizontal, Film } from "lucide-react";
-import { catalog, genres, titleHead } from "@/lib/catalog";
+import { catalog, genres, moods, filterCatalog, titleHead } from "@/lib/catalog";
 import { MovieCard } from "@/components/catalog-ui";
 import { Button } from "@/components/ui/button";
+import { DepthIcon } from "@/components/depth-icon";
+import { SurpriseMe } from "@/components/library-actions";
 export const Route = createFileRoute("/discover")({
   validateSearch: (s: Record<string, unknown>) => ({
     q: typeof s["q"] === "string" ? s["q"] : "",
     genre: typeof s["genre"] === "string" ? s["genre"] : "",
     kind: typeof s["kind"] === "string" ? s["kind"] : "all",
+    ...(typeof s["year"] === "string" ? { year: s["year"] } : {}),
+    ...(typeof s["language"] === "string" ? { language: s["language"] } : {}),
+    ...(typeof s["mood"] === "string" ? { mood: s["mood"] } : {}),
   }),
   head: () =>
     titleHead(
       "Discover your next story",
-      "Search NOCTRA’s original sample catalog by title, genre, movies, series and anime.",
+      "Search NOCTRA’s sample collection by title, genre, year, type, language or mood.",
     ),
   component: Discover,
 });
@@ -20,21 +25,25 @@ function Discover() {
   const search = Route.useSearch();
   const navigate = useNavigate({ from: "/discover" });
   const update = (patch: Partial<typeof search>) =>
-    void navigate({ search: { ...search, ...patch }, replace: true });
-  const matches = catalog.filter(
-    (t) =>
-      (search.kind === "all" || t.kind === search.kind) &&
-      (!search.genre || t.genre === search.genre) &&
-      `${t.name} ${t.genre} ${t.synopsis}`.toLowerCase().includes(search.q.toLowerCase()),
-  );
+    void navigate({ search: { ...search, ...patch }, replace: true, resetScroll: false });
+  const reset = () =>
+    void navigate({ search: { q: "", genre: "", kind: "all" }, replace: true, resetScroll: false });
+  const matches = filterCatalog(search);
+  const years = [...new Set(catalog.map((t) => t.year))];
+  const languages = [...new Set(catalog.flatMap((t) => (t.language ? [t.language] : [])))];
   return (
     <main className="page content-wrap">
       <div className="eyebrow mb-4">
-        <SlidersHorizontal size={14} />
+        <DepthIcon icon={SlidersHorizontal} tone="cyan" />
         YOUR NEXT OBSESSION
       </div>
-      <h1>Discover something extraordinary.</h1>
-      <p className="page-subtitle">New worlds. Unexpected stories. Find your kind of escape.</p>
+      <div className="section-heading">
+        <div className="min-w-0">
+          <h1>Discover something extraordinary.</h1>
+          <p className="page-subtitle">New worlds. Unexpected stories. Find your kind of escape.</p>
+        </div>
+        <SurpriseMe />
+      </div>
       <div className="discovery-form">
         <div className="search-field">
           <Search size={21} />
@@ -60,23 +69,19 @@ function Discover() {
             <Button
               key={kind}
               variant="filter"
+              aria-pressed={search.kind === kind}
               data-active={search.kind === kind}
               onClick={() => update({ kind })}
             >
-              {kind === "all"
-                ? "All titles"
-                : kind === "Movie"
-                  ? "Movies"
-                  : kind === "Series"
-                    ? "Series"
-                    : "Anime"}
+              {kind === "all" ? "All titles" : kind === "Movie" ? "Movies" : kind}
             </Button>
           ))}
-          <span className="w-px bg-border mx-2" />
+          <span className="filter-divider" />
           {genres.map((genre) => (
             <Button
               key={genre}
               variant="filter"
+              aria-pressed={search.genre === genre}
               data-active={search.genre === genre}
               onClick={() => update({ genre: search.genre === genre ? "" : genre })}
             >
@@ -84,20 +89,55 @@ function Discover() {
             </Button>
           ))}
         </div>
+        <div className="filter-details">
+          <label className="filter-select">
+            Year
+            <select
+              aria-label="Filter by year"
+              value={search.year || ""}
+              onChange={(e) => update({ year: e.target.value })}
+            >
+              <option value="">All years</option>
+              {years.map((y) => (
+                <option key={y} value={y}>
+                  {y}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="filter-select">
+            Language
+            <select
+              aria-label="Filter by language"
+              value={search.language || ""}
+              onChange={(e) => update({ language: e.target.value })}
+            >
+              <option value="">All languages</option>
+              {languages.map((l) => (
+                <option key={l}>{l}</option>
+              ))}
+            </select>
+          </label>
+          <div className="mood-chips">
+            <span>Tonight’s mood</span>
+            {moods.map((mood) => (
+              <Button
+                key={mood}
+                size="sm"
+                variant="filter"
+                aria-pressed={search.mood === mood}
+                data-active={search.mood === mood}
+                onClick={() => update({ mood: search.mood === mood ? "" : mood })}
+              >
+                {mood}
+              </Button>
+            ))}
+          </div>
+        </div>
       </div>
       <div className="section-heading">
-        <h2>
-          {search.q
-            ? "Search results"
-            : search.genre
-              ? search.genre
-              : search.kind === "all"
-                ? "The collection"
-                : search.kind === "Movie"
-                  ? "Movies"
-                  : search.kind}
-        </h2>
-        <span className="section-action">
+        <h2>{search.q ? "Search results" : search.genre || "The collection"}</h2>
+        <span className="section-action" role="status">
           {matches.length} {matches.length === 1 ? "title" : "titles"} · Sample catalog
         </span>
       </div>
@@ -109,10 +149,10 @@ function Discover() {
         </div>
       ) : (
         <div className="empty-state">
-          <Film size={40} />
+          <DepthIcon icon={Film} />
           <h2>No stories found. Yet.</h2>
           <p>Try another title or explore a different genre.</p>
-          <Button variant="glass" onClick={() => update({ q: "", genre: "", kind: "all" })}>
+          <Button variant="glass" onClick={reset}>
             Reset filters
           </Button>
         </div>

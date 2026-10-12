@@ -33,7 +33,7 @@ export function readProgress(): Record<string, PlaybackProgress> {
   }
 }
 export function saveProgress(id: string, time: number, duration: number) {
-  if (!Number.isFinite(duration) || duration <= 0) return;
+  if (!Number.isFinite(duration) || duration <= 0 || !Number.isFinite(time) || time < 0) return;
   try {
     const all = readProgress();
     all[id] = { time, duration, updated: Date.now() };

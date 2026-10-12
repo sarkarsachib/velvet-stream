@@ -1,4 +1,8 @@
 # Streaming experience
+- [x] Floating bottom navigation, lightweight dimensional icons and motion polish
+- [x] Local My List, categories, settings and search overlay
+- [x] Metadata filters, Surprise Me, series/episode browsing
+- [x] Validate new flows, accessibility, mobile layout and regression tests
 - [x] Cinematic design system and original catalog artwork
 - [x] Homepage, discovery, details and player routes
 - [x] Native/HLS player shell and local-only real playback progress

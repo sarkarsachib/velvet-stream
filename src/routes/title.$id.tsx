@@ -2,6 +2,7 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { Sparkles } from "lucide-react";
 import { catalog, getTitle, titleHead } from "@/lib/catalog";
 import { Hero, Rail } from "@/components/catalog-ui";
+import { EpisodeList } from "@/components/episode-list";
 import { AdSlot } from "@/components/ad-slot";
 export const Route = createFileRoute("/title/$id")({
   loader: ({ params }) => {
@@ -42,11 +43,14 @@ function TitleDetail() {
               <dd>{title.year} (sample)</dd>
               <dt>Runtime</dt>
               <dd>{title.duration} (concept)</dd>
+              <dt>Language</dt>
+              <dd>{title.language} (sample)</dd>
               <dt>Availability</dt>
               <dd>Preview only · Authorized media pending</dd>
             </dl>
           </div>
         </div>
+        <EpisodeList key={title.id} title={title} />
         <AdSlot placement="details" />
         <Rail
           name="More to explore"

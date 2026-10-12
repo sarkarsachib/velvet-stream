@@ -16,3 +16,7 @@
 - Keep advertising disabled until approved public publisher tags and provider-specific compliance review are supplied; consent-region or unresolved geography blocks all provider requests.
 - Keep private provider credentials and admin operations out of the public application; public placement configuration is not an admin interface.
 - Define visual roles and reusable cinematic styles in the global stylesheet; leaf routes own unique social metadata.
+- Keep saved titles and optional motion preferences in the local-library module, synchronized across tabs; no account or remote persistence is involved.
+- Use layered CSS/SVG depth icons and CSS transitions, not per-icon WebGL or another animation library, to protect mobile performance.
+- Render shared bottom navigation in the root shell but omit it on player routes and fullscreen; modal quick search uses the existing accessible dialog.
+- Keep series seasons and episodes as browser-safe sample metadata with optional authorized sources, and use the player search parameter to select an episode.

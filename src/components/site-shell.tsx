@@ -1,6 +1,9 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Search, Compass, ArrowUpRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import { ArrowUpRight } from "lucide-react";
+import { SearchOverlay } from "@/components/search-overlay";
+import { DepthIcon, depthIcons } from "@/components/depth-icon";
+import { useMotionPreference, useMyList } from "@/lib/local-library";
 export function Brand() {
   return (
     <Link to="/" className="brand" aria-label="NOCTRA home">
@@ -10,65 +13,65 @@ export function Brand() {
   );
 }
 export function SiteHeader() {
-  const { pathname, searchStr } = useLocation();
-  const nav = [
-    ["Home", ""],
-    ["Movies", "Movie"],
-    ["Series", "Series"],
-    ["Anime", "Anime"],
-    ["Discover", "all"],
-  ];
   return (
     <header className="site-header">
       <Brand />
-      <nav className="header-nav" aria-label="Main navigation">
-        {nav.map(([label, type]) =>
-          type ? (
-            <Link
-              key={label}
-              to="/discover"
-              search={{ kind: type, q: "", genre: "" }}
-              className={
-                pathname === "/discover" && searchStr.includes(`kind=${type}`) ? "active" : ""
-              }
-            >
-              {label}
-            </Link>
-          ) : (
-            <Link key={label} to="/" className={pathname === "/" ? "active" : ""}>
-              {label}
-            </Link>
-          ),
-        )}
-      </nav>
+      <span className="header-tagline">BEYOND THE ORDINARY</span>
       <div className="header-actions">
-        <Button asChild variant="ghost" size="icon" title="Search titles">
-          <Link
-            to="/discover"
-            search={{ q: "", kind: "all", genre: "" }}
-            aria-label="Search titles"
-          >
-            <Search size={19} />
-          </Link>
-        </Button>
-        <span className="header-divider" />
-        <Button
-          asChild
-          variant="ghost"
-          size="icon"
-          className="desktop-action"
-          title="Explore the catalog"
-        >
-          <Link
-            to="/discover"
-            search={{ q: "", kind: "all", genre: "" }}
-            aria-label="Explore catalog"
-          >
-            <Compass size={19} />
-          </Link>
-        </Button>
+        <span className="demo-label">ORIGINAL DEMO COLLECTION</span>
+        <SearchOverlay />
       </div>
     </header>
+  );
+}
+export function FloatingNavigation() {
+  const { pathname } = useLocation();
+  const [fullscreen, setFullscreen] = useState(false);
+  const ids = useMyList();
+  useMotionPreference();
+  useEffect(() => {
+    const update = () => setFullscreen(!!document.fullscreenElement);
+    document.addEventListener("fullscreenchange", update);
+    return () => document.removeEventListener("fullscreenchange", update);
+  }, []);
+  if (fullscreen || pathname.startsWith("/watch/")) return null;
+  const active =
+    pathname === "/discover"
+      ? 1
+      : pathname === "/categories"
+        ? 2
+        : pathname === "/my-list"
+          ? 3
+          : pathname === "/settings" || pathname === "/privacy"
+            ? 4
+            : 0;
+  const items = [
+    { label: "Home", icon: depthIcons.home, to: "/" },
+    { label: "Discover", icon: depthIcons.search, to: "/discover" },
+    { label: "Categories", icon: depthIcons.categories, to: "/categories" },
+    { label: "My List", icon: depthIcons.list, to: "/my-list" },
+    { label: "More", icon: depthIcons.settings, to: "/settings" },
+  ] as const;
+  return (
+    <nav className="floating-nav" aria-label="Primary navigation" data-active={active}>
+      <span className="nav-indicator" aria-hidden="true" />
+      {items.map((item, i) => (
+        <Link
+          key={item.label}
+          to={item.to}
+          search={item.to === "/discover" ? { q: "", kind: "all", genre: "" } : {}}
+          className="floating-item"
+          data-active={active === i}
+          aria-current={active === i ? "page" : undefined}
+        >
+          <DepthIcon icon={item.icon} tone={i === 1 || i === 2 ? "cyan" : "violet"} />
+          <span>{item.label}</span>
+          {item.label === "My List" && ids.length > 0 && (
+            <small className="list-count">{ids.length}</small>
+          )}
+        </Link>
+      ))}
+    </nav>
   );
 }
 export function SiteFooter() {
