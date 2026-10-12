@@ -1,4 +1,8 @@
 # Streaming experience
+- [ ] Replace duplicated icons with genuinely dimensional rendered assets
+- [ ] Custom browser video player with accessible controls and real-media tests
+- [ ] Consistent all-page spacing and Poppins typography
+- [ ] Desktop/mobile route audit, regression tests and lint
 - [x] Floating bottom navigation, lightweight dimensional icons and motion polish
 - [x] Local My List, categories, settings and search overlay
 - [x] Metadata filters, Surprise Me, series/episode browsing
