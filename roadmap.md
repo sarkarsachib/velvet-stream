@@ -1,0 +1,9 @@
+# Streaming experience
+- [x] Cinematic design system and original catalog artwork
+- [x] Homepage, discovery, details and player routes
+- [x] Native/HLS player shell and local-only real playback progress
+- [x] Isolated disabled-by-default advertising and privacy disclosure
+- [x] Verify browsing and honest preview state on desktop/mobile
+- [ ] Live streaming verification — blocked on authorized media URLs
+- [ ] Live advertising verification — blocked on approved provider codes and compliance configuration
+- [ ] Optional VAST playback integration — blocked on selected compatible provider/player SDK and real tag

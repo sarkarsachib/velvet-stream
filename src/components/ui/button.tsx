@@ -9,6 +9,9 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
+        cinematic: "bg-primary text-primary-foreground shadow-sm hover:bg-primary/85 h-11 px-6 font-semibold",
+        glass: "bg-secondary/80 text-secondary-foreground border border-border hover:bg-accent h-11 px-6",
+        filter: "bg-card text-muted-foreground border border-border hover:text-foreground hover:border-primary data-[active=true]:bg-primary/15 data-[active=true]:border-primary data-[active=true]:text-foreground",
         default: "bg-primary text-primary-foreground shadow hover:bg-primary/90",
         destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
         outline:
