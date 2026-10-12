@@ -223,6 +223,14 @@ export function StreamPlayer({ title, parentId }: { title: Title; parentId?: str
     }
   }
   function keys(e: KeyboardEvent<HTMLDivElement>) {
+    if (e.key === "Escape" && settings) {
+      e.preventDefault();
+      setSettings(false);
+      shell.current
+        ?.querySelector<HTMLButtonElement>('button[aria-label="Playback settings"]')
+        ?.focus();
+      return;
+    }
     if (
       e.target instanceof HTMLInputElement ||
       e.target instanceof HTMLSelectElement ||

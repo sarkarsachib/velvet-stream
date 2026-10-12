@@ -2405,7 +2405,7 @@ body:has(.player-empty) {
     font-size: 10px;
   }
   .player-time span {
-    display: none;
+    display: inline;
   }
   .player-remaining {
     display: none;
@@ -2441,5 +2441,14 @@ body:has(.player-empty) {
   .site-footer {
     margin-top: var(--space-8);
     padding-block: var(--space-6);
+  }
+}
+
+@media (max-width: 360px) {
+  .player-volume input {
+    display: none;
+  }
+  .player-control-row {
+    gap: 0;
   }
 }
