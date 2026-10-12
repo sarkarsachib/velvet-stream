@@ -2335,6 +2335,8 @@ body:has(.player-empty) {
   }
   .category-card {
     min-height: 228px;
+    aspect-ratio: auto;
+    min-width: 0;
   }
   .filter-details {
     display: grid;
