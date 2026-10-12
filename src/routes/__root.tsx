@@ -81,7 +81,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "NOCTRA · A different kind of movie night" },
-      { name: "description", content: "Discover original cinematic demo stories on NOCTRA. No accounts. Just exploration." },
+      {
+        name: "description",
+        content:
+          "Discover original cinematic demo stories on NOCTRA. No accounts. Just exploration.",
+      },
       { property: "og:title", content: "NOCTRA · A different kind of movie night" },
       { property: "og:description", content: "A cinematic destination for original demo stories." },
       { property: "og:type", content: "website" },
@@ -90,7 +94,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap",
+      },
       {
         rel: "stylesheet",
         href: appCss,
