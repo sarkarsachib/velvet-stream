@@ -4,7 +4,7 @@ import { Film, LoaderCircle, AlertCircle, RotateCcw, ArrowLeft } from "lucide-re
 import { Button } from "@/components/ui/button";
 import { type Title, type MediaSource } from "@/lib/catalog";
 import { readProgress, saveProgress } from "@/lib/progress";
-export function StreamPlayer({ title }: { title: Title }) {
+export function StreamPlayer({ title, parentId }: { title: Title; parentId?: string }) {
   const video = useRef<HTMLVideoElement>(null);
   const [source, setSource] = useState<MediaSource | undefined>(title.source);
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
@@ -85,7 +85,7 @@ export function StreamPlayer({ title }: { title: Title }) {
             authorized video source is required before streaming can begin.
           </p>
           <Button asChild variant="glass">
-            <Link to="/title/$id" params={{ id: title.id }}>
+            <Link to="/title/$id" params={{ id: parentId || title.id }}>
               <ArrowLeft />
               Back to title
             </Link>

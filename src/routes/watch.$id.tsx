@@ -22,9 +22,10 @@ function Watch() {
   const title = Route.useLoaderData();
   const search = Route.useSearch();
   const episode = title.seasons?.flatMap((s) => s.episodes).find((e) => e.id === search.episode);
+  const { source: titleSource, ...baseTitle } = title;
   const playbackTitle = episode
     ? {
-        ...title,
+        ...baseTitle,
         id: episode.id,
         name: `${title.name} · ${episode.name}`,
         duration: episode.duration,
@@ -46,18 +47,18 @@ function Watch() {
           <p>This episode is not in the sample catalog.</p>
         </div>
       ) : (
-        <StreamPlayer key={playbackTitle.id} title={playbackTitle} />
+        <StreamPlayer key={playbackTitle.id} title={playbackTitle} parentId={title.id} />
       )}
       <div className="section-heading mt-7">
         <div className="min-w-0">
           <h1 className="text-2xl">{playbackTitle.name}</h1>
           <p className="page-subtitle">
-            {title.year} · {title.genre} · {title.duration} · Original demo
+            {title.year} · {title.genre} · {playbackTitle.duration} · Original demo
           </p>
         </div>
         <ShieldCheck className="text-ice shrink-0" size={24} />
       </div>
-      <p className="page-subtitle max-w-2xl">{title.synopsis}</p>
+      <p className="page-subtitle max-w-2xl">{playbackTitle.synopsis}</p>
     </main>
   );
 }

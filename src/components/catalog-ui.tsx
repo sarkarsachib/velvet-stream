@@ -6,6 +6,7 @@ import { type Title } from "@/lib/catalog";
 import { useProgress } from "@/lib/progress";
 import { DepthIcon } from "@/components/depth-icon";
 import { SaveTitle } from "@/components/library-actions";
+import { useMotionPreference } from "@/lib/local-library";
 export function MovieCard({ title, progress }: { title: Title; progress?: number | undefined }) {
   const [loaded, setLoaded] = useState(false),
     [failed, setFailed] = useState(false);
@@ -208,6 +209,8 @@ export function Hero({
   const hero = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(true),
     [paused, setPaused] = useState(false);
+  const [interacting, setInteracting] = useState(false);
+  const { calm } = useMotionPreference();
   useEffect(() => {
     const element = hero.current;
     if (!element) return;
@@ -222,6 +225,8 @@ export function Hero({
       !slides?.length ||
       !visible ||
       paused ||
+      interacting ||
+      calm ||
       window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
       document.documentElement.dataset["motion"] === "calm"
     )
@@ -234,7 +239,7 @@ export function Hero({
       });
     }, 10000);
     return () => clearInterval(timer);
-  }, [slides, visible, paused, title.id]);
+  }, [slides, visible, paused, interacting, calm, title.id]);
   function parallax(e: PointerEvent<HTMLElement>) {
     if (
       e.pointerType !== "mouse" ||
@@ -257,15 +262,15 @@ export function Hero({
       ref={hero}
       className="hero"
       onPointerMove={parallax}
-      onPointerEnter={() => setPaused(true)}
+      onPointerEnter={() => setInteracting(true)}
       onPointerLeave={() => {
-        setPaused(false);
+        setInteracting(false);
         hero.current?.style.setProperty("--parallax-x", "0px");
         hero.current?.style.setProperty("--parallax-y", "0px");
       }}
-      onFocusCapture={() => setPaused(true)}
+      onFocusCapture={() => setInteracting(true)}
       onBlurCapture={(e) => {
-        if (!e.currentTarget.contains(e.relatedTarget)) setPaused(false);
+        if (!e.currentTarget.contains(e.relatedTarget)) setInteracting(false);
       }}
     >
       {(slides || [title]).map((t) => (
