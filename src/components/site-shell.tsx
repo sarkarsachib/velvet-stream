@@ -1,10 +1,97 @@
-import { Link, useLocation } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
-import { ArrowUpRight } from 'lucide-react';
-import { SearchOverlay } from '@/components/search-overlay';
-import { DepthIcon, depthIcons } from '@/components/depth-icon';
-import { useMotionPreference, useMyList } from '@/lib/local-library';
-export function Brand(){return <Link to="/" className="brand" aria-label="NOCTRA home"><span className="brand-mark" aria-hidden="true"/>NOCTRA<span className="text-primary">.</span></Link>;}
-export function SiteHeader(){return <header className="site-header"><Brand/><span className="header-tagline">BEYOND THE ORDINARY</span><div className="header-actions"><span className="demo-label">ORIGINAL DEMO COLLECTION</span><SearchOverlay/></div></header>;}
-export function FloatingNavigation(){const {pathname}=useLocation();const [fullscreen,setFullscreen]=useState(false);const ids=useMyList();useMotionPreference();useEffect(()=>{const update=()=>setFullscreen(!!document.fullscreenElement);document.addEventListener('fullscreenchange',update);return()=>document.removeEventListener('fullscreenchange',update);},[]);if(fullscreen||pathname.startsWith('/watch/'))return null;const active=pathname==='/discover'?1:pathname==='/categories'?2:pathname==='/my-list'?3:pathname==='/settings'||pathname==='/privacy'?4:0;const items=[{label:'Home',icon:depthIcons.home,to:'/'},{label:'Discover',icon:depthIcons.search,to:'/discover'},{label:'Categories',icon:depthIcons.categories,to:'/categories'},{label:'My List',icon:depthIcons.list,to:'/my-list'},{label:'More',icon:depthIcons.settings,to:'/settings'}] as const;return <nav className="floating-nav" aria-label="Primary navigation" data-active={active}><span className="nav-indicator" aria-hidden="true"/>{items.map((item,i)=><Link key={item.label} to={item.to} search={item.to==='/discover'?{q:'',kind:'all',genre:''}:{}} className="floating-item" data-active={active===i} aria-current={active===i?'page':undefined}><DepthIcon icon={item.icon} tone={i===1||i===2?'cyan':'violet'}/><span>{item.label}</span>{item.label==='My List'&&ids.length>0&&<small className="list-count">{ids.length}</small>}</Link>)}</nav>;}
-export function SiteFooter(){return <footer className="site-footer"><div><Brand/><p className="footer-copy">A different kind of movie night.<br/>Original sample catalog · Authorized media required · No accounts, ever.</p></div><div className="footer-links"><Link to="/discover" search={{q:'',kind:'all',genre:''}}>Explore <ArrowUpRight size={12} className="inline"/></Link><Link to="/privacy">Privacy & preferences</Link><span>© 2026 NOCTRA</span></div></footer>;}
+import { Link, useLocation } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { ArrowUpRight } from "lucide-react";
+import { SearchOverlay } from "@/components/search-overlay";
+import { DepthIcon, depthIcons } from "@/components/depth-icon";
+import { useMotionPreference, useMyList } from "@/lib/local-library";
+export function Brand() {
+  return (
+    <Link to="/" className="brand" aria-label="NOCTRA home">
+      <span className="brand-mark" aria-hidden="true" />
+      NOCTRA<span className="text-primary">.</span>
+    </Link>
+  );
+}
+export function SiteHeader() {
+  return (
+    <header className="site-header">
+      <Brand />
+      <span className="header-tagline">BEYOND THE ORDINARY</span>
+      <div className="header-actions">
+        <span className="demo-label">ORIGINAL DEMO COLLECTION</span>
+        <SearchOverlay />
+      </div>
+    </header>
+  );
+}
+export function FloatingNavigation() {
+  const { pathname } = useLocation();
+  const [fullscreen, setFullscreen] = useState(false);
+  const ids = useMyList();
+  useMotionPreference();
+  useEffect(() => {
+    const update = () => setFullscreen(!!document.fullscreenElement);
+    document.addEventListener("fullscreenchange", update);
+    return () => document.removeEventListener("fullscreenchange", update);
+  }, []);
+  if (fullscreen || pathname.startsWith("/watch/")) return null;
+  const active =
+    pathname === "/discover"
+      ? 1
+      : pathname === "/categories"
+        ? 2
+        : pathname === "/my-list"
+          ? 3
+          : pathname === "/settings" || pathname === "/privacy"
+            ? 4
+            : 0;
+  const items = [
+    { label: "Home", icon: depthIcons.home, to: "/" },
+    { label: "Discover", icon: depthIcons.search, to: "/discover" },
+    { label: "Categories", icon: depthIcons.categories, to: "/categories" },
+    { label: "My List", icon: depthIcons.list, to: "/my-list" },
+    { label: "More", icon: depthIcons.settings, to: "/settings" },
+  ] as const;
+  return (
+    <nav className="floating-nav" aria-label="Primary navigation" data-active={active}>
+      <span className="nav-indicator" aria-hidden="true" />
+      {items.map((item, i) => (
+        <Link
+          key={item.label}
+          to={item.to}
+          search={item.to === "/discover" ? { q: "", kind: "all", genre: "" } : {}}
+          className="floating-item"
+          data-active={active === i}
+          aria-current={active === i ? "page" : undefined}
+        >
+          <DepthIcon icon={item.icon} tone={i === 1 || i === 2 ? "cyan" : "violet"} />
+          <span>{item.label}</span>
+          {item.label === "My List" && ids.length > 0 && (
+            <small className="list-count">{ids.length}</small>
+          )}
+        </Link>
+      ))}
+    </nav>
+  );
+}
+export function SiteFooter() {
+  return (
+    <footer className="site-footer">
+      <div>
+        <Brand />
+        <p className="footer-copy">
+          A different kind of movie night.
+          <br />
+          Original sample catalog · Authorized media required · No accounts, ever.
+        </p>
+      </div>
+      <div className="footer-links">
+        <Link to="/discover" search={{ q: "", kind: "all", genre: "" }}>
+          Explore <ArrowUpRight size={12} className="inline" />
+        </Link>
+        <Link to="/privacy">Privacy & preferences</Link>
+        <span>© 2026 NOCTRA</span>
+      </div>
+    </footer>
+  );
+}

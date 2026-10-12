@@ -50,7 +50,7 @@ function TitleDetail() {
             </dl>
           </div>
         </div>
-        <EpisodeList key={title.id} title={title}/>
+        <EpisodeList key={title.id} title={title} />
         <AdSlot placement="details" />
         <Rail
           name="More to explore"

@@ -10,8 +10,11 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CategoriesRouteImport } from './routes/categories'
 import { Route as DiscoverRouteImport } from './routes/discover'
+import { Route as MyListRouteImport } from './routes/my-list'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as TitleIdRouteImport } from './routes/title.$id'
 import { Route as WatchIdRouteImport } from './routes/watch.$id'
 
@@ -20,14 +23,29 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CategoriesRoute = CategoriesRouteImport.update({
+  id: '/categories',
+  path: '/categories',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DiscoverRoute = DiscoverRouteImport.update({
   id: '/discover',
   path: '/discover',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MyListRoute = MyListRouteImport.update({
+  id: '/my-list',
+  path: '/my-list',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TitleIdRoute = TitleIdRouteImport.update({
@@ -43,38 +61,75 @@ const WatchIdRoute = WatchIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/categories': typeof CategoriesRoute
   '/discover': typeof DiscoverRoute
+  '/my-list': typeof MyListRoute
   '/privacy': typeof PrivacyRoute
+  '/settings': typeof SettingsRoute
   '/title/$id': typeof TitleIdRoute
   '/watch/$id': typeof WatchIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/categories': typeof CategoriesRoute
   '/discover': typeof DiscoverRoute
+  '/my-list': typeof MyListRoute
   '/privacy': typeof PrivacyRoute
+  '/settings': typeof SettingsRoute
   '/title/$id': typeof TitleIdRoute
   '/watch/$id': typeof WatchIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/categories': typeof CategoriesRoute
   '/discover': typeof DiscoverRoute
+  '/my-list': typeof MyListRoute
   '/privacy': typeof PrivacyRoute
+  '/settings': typeof SettingsRoute
   '/title/$id': typeof TitleIdRoute
   '/watch/$id': typeof WatchIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/discover' | '/privacy' | '/title/$id' | '/watch/$id'
+  fullPaths:
+    | '/'
+    | '/categories'
+    | '/discover'
+    | '/my-list'
+    | '/privacy'
+    | '/settings'
+    | '/title/$id'
+    | '/watch/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/discover' | '/privacy' | '/title/$id' | '/watch/$id'
-  id: '__root__' | '/' | '/discover' | '/privacy' | '/title/$id' | '/watch/$id'
+  to:
+    | '/'
+    | '/categories'
+    | '/discover'
+    | '/my-list'
+    | '/privacy'
+    | '/settings'
+    | '/title/$id'
+    | '/watch/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/categories'
+    | '/discover'
+    | '/my-list'
+    | '/privacy'
+    | '/settings'
+    | '/title/$id'
+    | '/watch/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CategoriesRoute: typeof CategoriesRoute
   DiscoverRoute: typeof DiscoverRoute
+  MyListRoute: typeof MyListRoute
   PrivacyRoute: typeof PrivacyRoute
+  SettingsRoute: typeof SettingsRoute
   TitleIdRoute: typeof TitleIdRoute
   WatchIdRoute: typeof WatchIdRoute
 }
@@ -88,6 +143,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/categories': {
+      id: '/categories'
+      path: '/categories'
+      fullPath: '/categories'
+      preLoaderRoute: typeof CategoriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/discover': {
       id: '/discover'
       path: '/discover'
@@ -95,11 +157,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DiscoverRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/my-list': {
+      id: '/my-list'
+      path: '/my-list'
+      fullPath: '/my-list'
+      preLoaderRoute: typeof MyListRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/privacy': {
       id: '/privacy'
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/title/$id': {
@@ -121,8 +197,11 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CategoriesRoute: CategoriesRoute,
   DiscoverRoute: DiscoverRoute,
+  MyListRoute: MyListRoute,
   PrivacyRoute: PrivacyRoute,
+  SettingsRoute: SettingsRoute,
   TitleIdRoute: TitleIdRoute,
   WatchIdRoute: WatchIdRoute,
 }

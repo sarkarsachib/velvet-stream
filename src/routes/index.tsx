@@ -38,7 +38,7 @@ function Index() {
   const icons = [Rocket, Ghost, Swords, Clapperboard, Drama, Orbit];
   return (
     <main>
-      <Hero title={featured} slides={[featured,catalog[0],catalog[3]]} />
+      <Hero title={featured} slides={[featured, catalog[0], catalog[3]]} />
       <div className="content-wrap">
         <Rail name="Trending Now" icon={<Flame />} titles={catalog} />
         <AdSlot placement="home" />
@@ -56,7 +56,7 @@ function Index() {
               <Orbit />
               Find your universe
             </h2>
-            <SurpriseMe/>
+            <SurpriseMe />
           </div>
           <div className="genre-grid">
             {genres.map((g, i) => {
@@ -68,7 +68,7 @@ function Index() {
                   search={{ q: "", genre: g, kind: "all" }}
                   className="genre-tile"
                 >
-                  <DepthIcon icon={Icon} tone="cyan"/>
+                  <DepthIcon icon={Icon} tone="cyan" />
                   {g}
                 </Link>
               );

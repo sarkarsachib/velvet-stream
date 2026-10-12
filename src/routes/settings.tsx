@@ -1,11 +1,110 @@
-import { createFileRoute, Link } from '@tanstack/react-router';
-import { Settings2, ShieldCheck, Trash2, ArrowUpRight } from 'lucide-react';
-import { useState } from 'react';
-import { titleHead } from '@/lib/catalog';
-import { clearList, useMotionPreference, useMyList } from '@/lib/local-library';
-import { clearProgress } from '@/lib/progress';
-import { Button } from '@/components/ui/button';
-import { DepthIcon } from '@/components/depth-icon';
-import { SurpriseMe } from '@/components/library-actions';
-export const Route=createFileRoute('/settings')({head:()=>titleHead('Your experience','Manage NOCTRA’s optional local motion preference, saved list and playback progress. No accounts or public admin tools.'),component:Settings});
-function Settings(){const {calm,setCalm}=useMotionPreference();const ids=useMyList();const [notice,setNotice]=useState('');return <main className="page content-wrap"><div className="eyebrow mb-4"><DepthIcon icon={Settings2}/>MAKE YOURSELF AT HOME</div><h1>Your experience.</h1><p className="page-subtitle">A few little things, entirely on your terms.</p><div className="settings-content"><section className="settings-row"><div className="min-w-0"><h2>Calmer motion</h2><p>Less movement. The same atmosphere.</p></div><Button variant="filter" role="switch" aria-checked={calm} aria-label="Calmer motion" data-active={calm} onClick={()=>setCalm(!calm)}>{calm?'On':'Off'}</Button></section><section className="settings-row"><div className="min-w-0"><h2>My List</h2><p>{ids.length} saved {ids.length===1?'story':'stories'} on this device.</p></div><Button variant="glass" onClick={()=>{if(window.confirm('Clear all saved titles on this device?')){clearList();setNotice('Your saved list has been cleared.');}}}><Trash2/>Clear list</Button></section><section className="settings-row"><div className="min-w-0"><h2>Playback progress</h2><p>Keep your place, or start fresh.</p></div><Button variant="glass" onClick={()=>{if(window.confirm('Clear playback progress on this device?')){clearProgress();setNotice('Your playback progress has been cleared.');}}}><Trash2/>Clear progress</Button></section><section className="settings-row"><div className="min-w-0"><h2>A little spontaneity</h2><p>Let the next story find you.</p></div><SurpriseMe/></section><section className="settings-row"><div className="min-w-0"><h2>Privacy, without the fine print</h2><p>No accounts. No active advertising providers.</p></div><Button asChild variant="glass"><Link to="/privacy"><ShieldCheck/>Privacy <ArrowUpRight/></Link></Button></section><p className="text-success text-sm mt-5" role="status">{notice}</p></div></main>;}
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { Settings2, ShieldCheck, Trash2, ArrowUpRight } from "lucide-react";
+import { useState } from "react";
+import { titleHead } from "@/lib/catalog";
+import { clearList, useMotionPreference, useMyList } from "@/lib/local-library";
+import { clearProgress } from "@/lib/progress";
+import { Button } from "@/components/ui/button";
+import { DepthIcon } from "@/components/depth-icon";
+import { SurpriseMe } from "@/components/library-actions";
+export const Route = createFileRoute("/settings")({
+  head: () =>
+    titleHead(
+      "Your experience",
+      "Manage NOCTRA’s optional local motion preference, saved list and playback progress. No accounts or public admin tools.",
+    ),
+  component: Settings,
+});
+function Settings() {
+  const { calm, setCalm } = useMotionPreference();
+  const ids = useMyList();
+  const [notice, setNotice] = useState("");
+  return (
+    <main className="page content-wrap">
+      <div className="eyebrow mb-4">
+        <DepthIcon icon={Settings2} />
+        MAKE YOURSELF AT HOME
+      </div>
+      <h1>Your experience.</h1>
+      <p className="page-subtitle">A few little things, entirely on your terms.</p>
+      <div className="settings-content">
+        <section className="settings-row">
+          <div className="min-w-0">
+            <h2>Calmer motion</h2>
+            <p>Less movement. The same atmosphere.</p>
+          </div>
+          <Button
+            variant="filter"
+            role="switch"
+            aria-checked={calm}
+            aria-label="Calmer motion"
+            data-active={calm}
+            onClick={() => setCalm(!calm)}
+          >
+            {calm ? "On" : "Off"}
+          </Button>
+        </section>
+        <section className="settings-row">
+          <div className="min-w-0">
+            <h2>My List</h2>
+            <p>
+              {ids.length} saved {ids.length === 1 ? "story" : "stories"} on this device.
+            </p>
+          </div>
+          <Button
+            variant="glass"
+            onClick={() => {
+              if (window.confirm("Clear all saved titles on this device?")) {
+                clearList();
+                setNotice("Your saved list has been cleared.");
+              }
+            }}
+          >
+            <Trash2 />
+            Clear list
+          </Button>
+        </section>
+        <section className="settings-row">
+          <div className="min-w-0">
+            <h2>Playback progress</h2>
+            <p>Keep your place, or start fresh.</p>
+          </div>
+          <Button
+            variant="glass"
+            onClick={() => {
+              if (window.confirm("Clear playback progress on this device?")) {
+                clearProgress();
+                setNotice("Your playback progress has been cleared.");
+              }
+            }}
+          >
+            <Trash2 />
+            Clear progress
+          </Button>
+        </section>
+        <section className="settings-row">
+          <div className="min-w-0">
+            <h2>A little spontaneity</h2>
+            <p>Let the next story find you.</p>
+          </div>
+          <SurpriseMe />
+        </section>
+        <section className="settings-row">
+          <div className="min-w-0">
+            <h2>Privacy, without the fine print</h2>
+            <p>No accounts. No active advertising providers.</p>
+          </div>
+          <Button asChild variant="glass">
+            <Link to="/privacy">
+              <ShieldCheck />
+              Privacy <ArrowUpRight />
+            </Link>
+          </Button>
+        </section>
+        <p className="text-success text-sm mt-5" role="status">
+          {notice}
+        </p>
+      </div>
+    </main>
+  );
+}

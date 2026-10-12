@@ -14,8 +14,17 @@ export interface MediaSource {
   subtitles?: undefined | { src: string; label: string; language: string }[];
   qualities?: { label: string; url: string; type: "native" | "hls" }[];
 }
-export interface Episode { id: string; name: string; duration: string; synopsis: string; source?: MediaSource }
-export interface Season { number: number; episodes: Episode[] }
+export interface Episode {
+  id: string;
+  name: string;
+  duration: string;
+  synopsis: string;
+  source?: MediaSource;
+}
+export interface Season {
+  number: number;
+  episodes: Episode[];
+}
 export interface Title {
   id: string;
   name: string;
@@ -44,7 +53,8 @@ export const catalog: [Title, Title, Title, Title, Title, Title] = [
     rating: "8.4",
     image: p1,
     cover: neonCover,
-    language: "English", mood: "On the edge",
+    language: "English",
+    mood: "On the edge",
     synopsis:
       "In a city that never sees daylight, a missing-persons detective uncovers a secret hidden in the neon. Every memory comes at a price.",
   },
@@ -57,7 +67,8 @@ export const catalog: [Title, Title, Title, Title, Title, Title] = [
     duration: "2h 18m",
     rating: "8.8",
     image: p2,
-    language: "English", mood: "Otherworldly",
+    language: "English",
+    mood: "Otherworldly",
     cover: hero,
     synopsis:
       "At the edge of the known universe, a lone explorer discovers a signal that could change everything. Some journeys take you further than the stars.",
@@ -72,7 +83,8 @@ export const catalog: [Title, Title, Title, Title, Title, Title] = [
     duration: "12 episodes",
     rating: "9.1",
     image: p3,
-    language: "Japanese", mood: "Otherworldly",
+    language: "Japanese",
+    mood: "Otherworldly",
     synopsis:
       "A quiet village. An ancient blade. A young guardian who must choose between the world she knows and the destiny waiting beyond it.",
     fresh: true,
@@ -87,7 +99,8 @@ export const catalog: [Title, Title, Title, Title, Title, Title] = [
     rating: "8.2",
     image: p4,
     cover: pinesCover,
-    language: "English", mood: "On the edge",
+    language: "English",
+    mood: "On the edge",
     synopsis:
       "A remote cabin holds the answer to a disappearance. But the forest has kept its secrets for generations, and it is not ready to let them go.",
   },
@@ -100,7 +113,8 @@ export const catalog: [Title, Title, Title, Title, Title, Title] = [
     duration: "1h 56m",
     rating: "8.6",
     image: p5,
-    language: "French", mood: "Slow burn",
+    language: "French",
+    mood: "Slow burn",
     synopsis:
       "One unforgettable night in a jazz club brings two strangers together. By sunrise, neither will be the person they used to be.",
     fresh: true,
@@ -114,7 +128,8 @@ export const catalog: [Title, Title, Title, Title, Title, Title] = [
     duration: "10 episodes",
     rating: "8.9",
     image: p6,
-    language: "English", mood: "Otherworldly",
+    language: "English",
+    mood: "Otherworldly",
     synopsis:
       "Beyond the frozen mountains, a fallen guardian sets out to return a stolen crown. An ancient creature shadows every step.",
   },
@@ -138,7 +153,75 @@ export function titleHead(title: string, description: string) {
 }
 
 // Original sample episode metadata, not a claim of playable episodes.
-const episodeNames: Record<string,string[]> = {"the-silent-pines":["The Arrival","A Light in the Trees","The Missing Trail","Under the Roots","The Other Side","What the Forest Keeps","Echoes","Daybreak"],"the-last-kingdom":["The Fallen Crown","North of the Wall","Ash & Ice","A Guardian’s Oath","The Crossing","The Old Kingdom","Wings in the Snow","The Siege","A Price to Pay","Homecoming"],"sakura-blade":["First Bloom","The Ancient Blade","A Stranger Arrives","Beyond the Village","Moonlit Promise","The Crossing","Petals & Steel","The Lost Guardian","An Unbroken Bond","The Storm","A Choice","A New Dawn"]};
-for (const title of catalog) {const names=episodeNames[title.id];if(names)title.seasons=[{number:1,episodes:names.map((name,index)=>({id:`${title.id}-e${index+1}`,name,duration:title.kind==='Anime'?'24m':'45m',synopsis:`Chapter ${index+1} of ${title.name}. Original sample episode; authorized media pending.`}))}];}
-export const moods=['Otherworldly','On the edge','Slow burn'];
-export function filterCatalog(filters:{q:string;genre:string;kind:string;year?:string;language?:string;mood?:string}) {return catalog.filter(t=>(filters.kind==='all'||t.kind===filters.kind)&&(!filters.genre||t.genre===filters.genre)&&(!filters.year||String(t.year)===filters.year)&&(!filters.language||t.language===filters.language)&&(!filters.mood||t.mood===filters.mood)&&`${t.name} ${t.genre} ${t.synopsis}`.toLowerCase().includes(filters.q.toLowerCase()));}
+const episodeNames: Record<string, string[]> = {
+  "the-silent-pines": [
+    "The Arrival",
+    "A Light in the Trees",
+    "The Missing Trail",
+    "Under the Roots",
+    "The Other Side",
+    "What the Forest Keeps",
+    "Echoes",
+    "Daybreak",
+  ],
+  "the-last-kingdom": [
+    "The Fallen Crown",
+    "North of the Wall",
+    "Ash & Ice",
+    "A Guardian’s Oath",
+    "The Crossing",
+    "The Old Kingdom",
+    "Wings in the Snow",
+    "The Siege",
+    "A Price to Pay",
+    "Homecoming",
+  ],
+  "sakura-blade": [
+    "First Bloom",
+    "The Ancient Blade",
+    "A Stranger Arrives",
+    "Beyond the Village",
+    "Moonlit Promise",
+    "The Crossing",
+    "Petals & Steel",
+    "The Lost Guardian",
+    "An Unbroken Bond",
+    "The Storm",
+    "A Choice",
+    "A New Dawn",
+  ],
+};
+for (const title of catalog) {
+  const names = episodeNames[title.id];
+  if (names)
+    title.seasons = [
+      {
+        number: 1,
+        episodes: names.map((name, index) => ({
+          id: `${title.id}-e${index + 1}`,
+          name,
+          duration: title.kind === "Anime" ? "24m" : "45m",
+          synopsis: `Chapter ${index + 1} of ${title.name}. Original sample episode; authorized media pending.`,
+        })),
+      },
+    ];
+}
+export const moods = ["Otherworldly", "On the edge", "Slow burn"];
+export function filterCatalog(filters: {
+  q: string;
+  genre: string;
+  kind: string;
+  year?: string;
+  language?: string;
+  mood?: string;
+}) {
+  return catalog.filter(
+    (t) =>
+      (filters.kind === "all" || t.kind === filters.kind) &&
+      (!filters.genre || t.genre === filters.genre) &&
+      (!filters.year || String(t.year) === filters.year) &&
+      (!filters.language || t.language === filters.language) &&
+      (!filters.mood || t.mood === filters.mood) &&
+      `${t.name} ${t.genre} ${t.synopsis}`.toLowerCase().includes(filters.q.toLowerCase()),
+  );
+}
