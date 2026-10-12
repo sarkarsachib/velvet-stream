@@ -88,8 +88,17 @@ export function StreamPlayer({ title, parentId }: { title: Title; parentId?: str
       ),
     );
     const update = () => setFullscreen(document.fullscreenElement === shell.current);
+    const v = video.current;
+    const entered = () => setPip(true);
+    const left = () => setPip(false);
+    v?.addEventListener("enterpictureinpicture", entered);
+    v?.addEventListener("leavepictureinpicture", left);
     document.addEventListener("fullscreenchange", update);
-    return () => document.removeEventListener("fullscreenchange", update);
+    return () => {
+      document.removeEventListener("fullscreenchange", update);
+      v?.removeEventListener("enterpictureinpicture", entered);
+      v?.removeEventListener("leavepictureinpicture", left);
+    };
   }, [source]);
   useEffect(() => {
     if (status !== "loading" || !source) return;
@@ -347,8 +356,6 @@ export function StreamPlayer({ title, parentId }: { title: Title; parentId?: str
               setMuted(v.muted);
             }
           }}
-          onEnterPictureInPicture={() => setPip(true)}
-          onLeavePictureInPicture={() => setPip(false)}
           onTimeUpdate={() => {
             sync();
             const v = video.current;
