@@ -69,3 +69,7 @@ cd <repository-name>
 npm i
 npm run dev
 ```
+
+## Deployment
+
+See [Firebase App Hosting setup](FIREBASE_DEPLOYMENT.md) for the production Node.js runtime and project connection steps.
