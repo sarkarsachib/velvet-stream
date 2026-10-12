@@ -212,7 +212,7 @@ export function StreamPlayer({ title }: { title: Title }) {
                 value={source.url}
                 onChange={(e) => {
                   const v = video.current;
-                  if (v) position.current = {time: v.currentTime, resume: !v.paused};
+                  if (v) position.current = { time: v.currentTime, resume: !v.paused };
                   if (e.target.value === title.source?.url) {
                     setSource(title.source);
                     return;

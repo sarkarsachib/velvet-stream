@@ -16,10 +16,19 @@ describe("Honest sample streaming experience", () => {
     expect(readList()).toEqual([]);
   });
   it("filters actual sample metadata and provides non-playable episode metadata", () => {
-    expect(filterCatalog({q:"",kind:"all",genre:"",language:"French"}).map(t=>t.id)).toEqual(["midnight-in-velvet"]);
-    expect(filterCatalog({q:"",kind:"all",genre:"",language:"French",year:"2025"})).toEqual([]);
+    expect(
+      filterCatalog({ q: "", kind: "all", genre: "", language: "French" }).map((t) => t.id),
+    ).toEqual(["midnight-in-velvet"]);
+    expect(
+      filterCatalog({ q: "", kind: "all", genre: "", language: "French", year: "2025" }),
+    ).toEqual([]);
     expect(getTitle("the-silent-pines")?.seasons?.[0]?.episodes.length).toBe(8);
-    expect(catalog.flatMap(t=>t.seasons||[]).flatMap(s=>s.episodes).every(e=>!e.source)).toBe(true);
+    expect(
+      catalog
+        .flatMap((t) => t.seasons || [])
+        .flatMap((s) => s.episodes)
+        .every((e) => !e.source),
+    ).toBe(true);
   });
   it("does not invent playable media or progress", () => {
     expect(catalog.every((title) => title.source === undefined)).toBe(true);
