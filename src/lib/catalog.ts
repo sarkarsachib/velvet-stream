@@ -6,9 +6,9 @@ import p4 from '@/assets/poster-4.jpg';
 import p5 from '@/assets/poster-5.jpg';
 import p6 from '@/assets/poster-6.jpg';
 export type Genre = 'Sci-Fi' | 'Thriller' | 'Anime' | 'Adventure' | 'Drama' | 'Fantasy';
-export interface MediaSource { url: string; type: 'native' | 'hls'; subtitles?: {src: string; label: string; language: string}[]; qualities?: {label: string; url: string; type: 'native' | 'hls'}[] }
+export interface MediaSource { url: string; type: 'native' | 'hls'; subtitles?: undefined | {src: string; label: string; language: string}[]; qualities?: {label: string; url: string; type: 'native' | 'hls'}[] }
 export interface Title { id: string; name: string; genre: Genre; kind: 'Movie' | 'Series' | 'Anime'; year: number; duration: string; rating: string; image: string; cover?: string; synopsis: string; fresh?: boolean; source?: MediaSource }
-export const catalog: Title[] = [
+export const catalog: [Title, Title, Title, Title, Title, Title] = [
  {id:'neon-district',name:'Neon District',genre:'Thriller',kind:'Movie',year:2026,duration:'1h 48m',rating:'8.4',image:p1,synopsis:'In a city that never sees daylight, a missing-persons detective uncovers a secret hidden in the neon. Every memory comes at a price.'},
  {id:'beyond-the-horizon',name:'Beyond the Horizon',genre:'Sci-Fi',kind:'Movie',year:2026,duration:'2h 18m',rating:'8.8',image:p2,cover:hero,synopsis:'At the edge of the known universe, a lone explorer discovers a signal that could change everything. Some journeys take you further than the stars.',fresh:true},
  {id:'sakura-blade',name:'Sakura Blade',genre:'Anime',kind:'Anime',year:2026,duration:'12 episodes',rating:'9.1',image:p3,synopsis:'A quiet village. An ancient blade. A young guardian who must choose between the world she knows and the destiny waiting beyond it.',fresh:true},
